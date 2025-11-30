@@ -26,7 +26,10 @@ export function useTradingData() {
     if (!tradingData) return null;
 
     if (filters.year !== '全部') {
-      const filteredTrades = tradingData.trades.filter(trade => trade.year === parseInt(filters.year));
+      const selectedYear = parseInt(filters.year);
+      // 以平仓时间归类，仅保留平仓记录并按所选年份筛选
+      const filteredTrades = tradingData.trades
+        .filter(trade => trade.type.includes('出场') && trade.year === selectedYear);
       return {
         ...tradingData,
         trades: filteredTrades,

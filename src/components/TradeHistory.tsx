@@ -21,9 +21,7 @@ export function TradeHistory({ trades }: TradeHistoryProps) {
     }).format(value);
   };
 
-  const formatPercent = (value: number) => {
-    return `${value >= 0 ? '+' : ''}${value.toFixed(2)}%`;
-  };
+  
 
   const handleSort = (field: keyof TradeRecord) => {
     if (sortField === field) {

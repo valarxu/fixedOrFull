@@ -42,15 +42,15 @@ export function TradingChart({ trades }: TradingChartProps) {
     );
   }
 
-  // 按时间排序
-  const sortedTrades = [...trades].sort((a, b) => 
-    new Date(a.datetime).getTime() - new Date(b.datetime).getTime()
-  );
+  // 按时间排序，仅取平仓记录，保证每笔完整交易仅展示一次
+  const completedTrades = [...trades]
+    .filter(t => t.type.includes('出场'))
+    .sort((a, b) => new Date(a.datetime).getTime() - new Date(b.datetime).getTime());
 
   // 准备图表数据
-  const labels = sortedTrades.map((trade, index) => `交易${index + 1}`);
-  const pnlData = sortedTrades.map(trade => trade.netPnl);
-  const cumulativeData = sortedTrades.map(trade => trade.cumulativePnl);
+  const labels = completedTrades.map((trade, index) => `交易${index + 1}`);
+  const pnlData = completedTrades.map(trade => trade.netPnl);
+  const cumulativeData = completedTrades.map(trade => trade.cumulativePnl);
 
   const data: ChartData<'bar' | 'line'> = {
     labels,
@@ -101,12 +101,12 @@ export function TradingChart({ trades }: TradingChartProps) {
         callbacks: {
           title: (context) => {
             const index = context[0].dataIndex;
-            const trade = sortedTrades[index];
+            const trade = completedTrades[index];
             return `时间: ${trade.datetime}`;
           },
           afterLabel: (context) => {
             const index = context.dataIndex;
-            const trade = sortedTrades[index];
+            const trade = completedTrades[index];
             return [
               `价格: $${trade.price.toFixed(2)}`,
               `信号: ${trade.signal}`,
@@ -121,7 +121,7 @@ export function TradingChart({ trades }: TradingChartProps) {
         display: true,
         title: {
           display: true,
-          text: '交易序号'
+          text: '交易序号（按平仓）'
         }
       },
       y: {

@@ -56,7 +56,7 @@ function parseCSV(filePath: string): Promise<TradeRecord[]> {
     
     fs.createReadStream(filePath)
       .pipe(csv({ separator: ',' }))
-      .on('data', (row: any) => {
+      .on('data', (row: Record<string, string>) => {
         try {
           const datetime = row['日期/时间'];
           const year = parseInt(datetime.split('-')[0]);
@@ -213,7 +213,7 @@ async function convertData() {
   const indexContent = `
 import type { TradingData, TradeRecord } from '../types/trading';
 
-${allData.map((data, index) => 
+${allData.map((data) => 
   `import ${data.coin}${data.emaPeriod}${data.mode} from './${data.coin}-${data.emaPeriod}-${data.mode}.json';`
 ).join('\n')}
 
