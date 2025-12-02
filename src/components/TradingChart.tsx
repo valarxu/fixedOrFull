@@ -8,6 +8,7 @@ import {
   Title,
   Tooltip,
   Legend,
+  BarController,
   BarElement,
   ChartOptions,
   ChartData
@@ -23,6 +24,7 @@ ChartJS.register(
   Title,
   Tooltip,
   Legend,
+  BarController,
   BarElement
 );
 
